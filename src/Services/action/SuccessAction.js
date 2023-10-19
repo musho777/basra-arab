@@ -94,3 +94,10 @@ export const SuccessCreateStoryTeam = (data) => {
         data
     }
 }
+
+export const SuccessGetStoryTeam = (data) => {
+    return {
+        type: 'SuccessGetStoryTeam',
+        data
+    }
+}

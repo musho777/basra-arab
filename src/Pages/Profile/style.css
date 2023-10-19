@@ -10,7 +10,7 @@
   gap: 60px;
 }
 
-.storiesBlock > h1 {
+.storiesBlock>h1 {
   color: #1f2024;
   font-size: 34px;
   font-style: normal;
@@ -22,6 +22,7 @@
   display: flex;
   align-items: center;
   gap: 50px;
+  flex-wrap: wrap;
 }
 
 .eachStory {
@@ -43,13 +44,14 @@
   align-items: center;
 }
 
-.eachStoryImg > img {
+.eachStoryImg>img {
   width: 90px;
   height: 90px;
   border-radius: 50%;
+  object-fit: cover;
 }
 
-.eachStory > img {
+.eachStory>img {
   width: 70px;
   height: 70px;
   border-radius: 50%;
@@ -63,7 +65,7 @@
   gap: 123px;
 }
 
-.banners > h1 {
+.banners>h1 {
   color: #1f2024;
   font-size: 34px;
   font-style: normal;
@@ -111,7 +113,7 @@
   gap: 60px;
 }
 
-.siteHeaderBlock > h1 {
+.siteHeaderBlock>h1 {
   color: #1f2024;
   font-size: 28px;
   font-style: normal;
@@ -126,13 +128,13 @@
   flex-wrap: wrap;
 }
 
-.siteHeader > img {
+.siteHeader>img {
   width: 140px;
   height: 140px;
   border-radius: 8px;
 }
 
-.siteHeader > .addHeader {
+.siteHeader>.addHeader {
   width: 70px;
   height: 70px;
   margin: auto;

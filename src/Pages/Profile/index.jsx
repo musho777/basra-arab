@@ -1,6 +1,8 @@
+import { useDispatch, useSelector } from 'react-redux'
+import { GetStoryTeamAction } from '../../Services/action/action'
 import { AddTeam } from '../AddTeam'
 import './style.css'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 export const Profile = () => {
     const [selectedBanner, setSelectedBanner] = useState(1)
@@ -151,6 +153,17 @@ export const Profile = () => {
     ])
 
     const [openTeam, setOpenTeam] = useState(false)
+    const { getStoryTeam } = useSelector((st) => st)
+    const dispatch = useDispatch()
+    useEffect(() => {
+        dispatch(GetStoryTeamAction())
+    }, [])
+
+    useEffect(() => {
+        if (getStoryTeam.data) {
+            setStories(getStoryTeam?.data)
+        }
+    }, [getStoryTeam])
 
     return (
         <div className='profile'>
@@ -164,7 +177,7 @@ export const Profile = () => {
                     {stories?.length > 0 && stories?.map((e, i) => (
                         <div className='eachStory' key={i}>
                             <div className='eachStoryImg'>
-                                <img alt='' src={require(`../../assets/images/${e?.image}`)} />
+                                <img alt='' src={`https://basrabackend.justcode.am/uploads/${e.photo}`} />
                             </div>
                             <span>{e?.name}</span>
                         </div>

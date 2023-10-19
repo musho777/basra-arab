@@ -6,7 +6,7 @@ import { Button, Pagination } from '@mui/material'
 import { useDispatch, useSelector } from 'react-redux'
 import { EditProduct } from '../EditProduct'
 import { useEffect } from 'react'
-import { DelectPorducetsAction, GetAllProducts } from '../../Services/action/action'
+import { DelectPorducetsAction, GetAllProducts, GetStoryTeamAction } from '../../Services/action/action'
 import { Loading } from '../../Components/Loading'
 
 
@@ -18,8 +18,6 @@ export const Products = () => {
     const [editProduct, setEditProduct] = useState(false)
     const { getProducts } = useSelector(st => st)
     const [editId, setEditId] = useState(null)
-
-
     const dispatch = useDispatch()
 
     useEffect(() => {
@@ -31,6 +29,7 @@ export const Products = () => {
     useEffect(() => {
         setTableData(getProducts?.data?.data)
     }, [getProducts])
+
 
 
     const DeletProducts = (id) => {
