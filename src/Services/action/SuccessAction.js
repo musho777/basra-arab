@@ -101,3 +101,10 @@ export const SuccessGetStoryTeam = (data) => {
         data
     }
 }
+export const SuccessGetSinglStory = (data) => {
+    return {
+        type: 'SuccessGetSinglStory',
+        data
+    }
+}
+

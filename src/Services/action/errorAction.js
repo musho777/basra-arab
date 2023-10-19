@@ -88,3 +88,9 @@ export const ErrorGetStoryTeam = () => {
         type: 'ErrorGetStoryTeam'
     }
 }
+
+export const ErrorGetSinglStory = () => {
+    return {
+        type: 'ErrorGetSinglStory'
+    }
+}

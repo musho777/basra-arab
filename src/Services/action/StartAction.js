@@ -93,3 +93,9 @@ export const StartDeletStoryTeam = () => {
         type: 'StartDeletStoryTeam'
     }
 }
+
+export const StartGetSinglStory = () => {
+    return {
+        type: 'StartGetSinglStory'
+    }
+}

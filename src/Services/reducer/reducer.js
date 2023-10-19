@@ -12,6 +12,7 @@ import { GetSinglProductReducer } from './GetSinglProductReducer'
 import { UpdateProductReducer } from './UpdateProductReducer'
 import { CreateStoryTeamReducer } from './CreateStoryTeamReducer'
 import { GetStoryTeamReducer } from './GetStoryTeamReducer'
+import { GetSinglStoryReducer } from './GetSinglStoryReducer'
 
 
 export default combineReducers({
@@ -27,5 +28,6 @@ export default combineReducers({
     getSinglProduct: GetSinglProductReducer,
     updateProduct: UpdateProductReducer,
     createStoryTeam: CreateStoryTeamReducer,
-    getStoryTeam: GetStoryTeamReducer
+    getStoryTeam: GetStoryTeamReducer,
+    getSinglStory: GetSinglStoryReducer,
 })
