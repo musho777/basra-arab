@@ -1,4 +1,4 @@
-import { StartCreatPorduct, StartCreataStoryTeam, StartCreateCategory, StartDeletCategory, StartGetBreands, StartGetCategory, StartGetCollections, StartGetForAge, StartGetGenders, StartGetPlatofrms, StartGetProducts, StartGetSinglProfil, StartGetStoryTeam, StartLogin, StartUpdateProduct } from "./StartAction";
+import { StartCreatPorduct, StartCreataStoryTeam, StartCreateCategory, StartDeletCategory, StartDeletStoryTeam, StartGetBreands, StartGetCategory, StartGetCollections, StartGetForAge, StartGetGenders, StartGetPlatofrms, StartGetProducts, StartGetSinglProfil, StartGetStoryTeam, StartLogin, StartUpdateProduct } from "./StartAction";
 import { SuccessCreatProduct, SuccessCreateCategory, SuccessCreateStoryTeam, SuccessDelectCategory, SuccessGetBreand, SuccessGetCategory, SuccessGetCollections, SuccessGetForAge, SuccessGetGenders, SuccessGetPlatforms, SuccessGetProducts, SuccessGetSinglProfil, SuccessGetStoryTeam, SuccessLogin, SuccessUpdateCategory, SuccessUpdateProduct } from "./SuccessAction"
 import { ErrorCreatCategory, ErrorCreatProduct, ErrorCreatStoryTeam, ErrorDeletCategory, ErrorGetBreand, ErrorGetCategory, ErrorGetCollections, ErrorGetForAge, ErrorGetGenders, ErrorGetPlatforms, ErrorGetPorducts, ErrorGetSinglProfil, ErrorGetStoryTeam, ErrorLogin, ErrorUpdateCategory, ErrorUpdateProduct } from "./errorAction";
 
@@ -591,6 +591,35 @@ export const GetStoryTeamAction = () => {
                 }
                 else {
                     dispatch(ErrorGetStoryTeam())
+                }
+            })
+            .catch((error) => {
+                dispatch(ErrorGetStoryTeam())
+            });
+    }
+}
+
+export const DeleteStoryTeamAction = (data) => {
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+    myHeaders.append('Authorization', `Bearer ${token}`);
+    var requestOptions = {
+        method: 'POST',
+        headers: myHeaders,
+        body: JSON.stringify(data),
+    };
+    return (dispatch) => {
+        dispatch(StartDeletStoryTeam())
+        fetch(`${api}/delete_story_theme`, requestOptions)
+            .then((r) => r.json())
+            .then(r => {
+                console.log(r)
+                if (r.status) {
+                    dispatch(GetStoryTeamAction())
+                }
+                else {
+                    dispatch(ErrorGetStoryTeam())
+
                 }
             })
             .catch((error) => {

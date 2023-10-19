@@ -87,3 +87,9 @@ export const StartGetStoryTeam = () => {
         type: 'StartGetStoryTeam'
     }
 }
+
+export const StartDeletStoryTeam = () => {
+    return {
+        type: 'StartDeletStoryTeam'
+    }
+}

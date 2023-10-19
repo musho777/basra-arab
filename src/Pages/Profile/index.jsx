@@ -1,37 +1,13 @@
 import { useDispatch, useSelector } from 'react-redux'
-import { GetStoryTeamAction } from '../../Services/action/action'
+import { DeleteStoryTeamAction, GetStoryTeamAction } from '../../Services/action/action'
 import { AddTeam } from '../AddTeam'
 import './style.css'
 import { useEffect, useState } from 'react'
+import { Loading } from '../../Components/Loading'
 
 export const Profile = () => {
     const [selectedBanner, setSelectedBanner] = useState(1)
-    const [stories, setStories] = useState([
-        {
-            name: 'مخزون',
-            image: 'story.png',
-        },
-        {
-            name: 'مخزون',
-            image: 'story.png',
-        },
-        {
-            name: 'مخزون',
-            image: 'story.png',
-        },
-        {
-            name: 'مخزون',
-            image: 'story.png',
-        },
-        {
-            name: 'مخزون',
-            image: 'story.png',
-        },
-        {
-            name: 'مخزون',
-            image: 'story.png',
-        },
-    ])
+    const [stories, setStories] = useState([])
     const [headerImages, setHeaderImages] = useState([
         {
             image: 'img.png',
@@ -173,19 +149,27 @@ export const Profile = () => {
             />
             <section className='storiesBlock'>
                 <h1>قصص</h1>
-                <div className='stories'>
+                {!getStoryTeam.deletLoading ? <div className='stories'>
                     {stories?.length > 0 && stories?.map((e, i) => (
                         <div className='eachStory' key={i}>
                             <div className='eachStoryImg'>
                                 <img alt='' src={`https://basrabackend.justcode.am/uploads/${e.photo}`} />
                             </div>
                             <span>{e?.name}</span>
+                            <div className='deletStoryTeam' onClick={() => dispatch(DeleteStoryTeamAction({ story_id: e.id }))}>
+                                x
+                            </div>
                         </div>
+
+
                     ))}
                     <div className='eachStory'>
                         <img onClick={() => setOpenTeam(true)} alt='' src={require('../../assets/images/add.png')} />
                     </div>
-                </div>
+                </div> :
+                    <Loading />
+                }
+
             </section>
 
             <section className='banners'>
