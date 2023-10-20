@@ -94,3 +94,9 @@ export const ErrorGetSinglStory = () => {
         type: 'ErrorGetSinglStory'
     }
 }
+
+export const ErrorEditOrder = () => {
+    return {
+        type: 'ErrorEditOrder'
+    }
+}

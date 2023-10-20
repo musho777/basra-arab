@@ -108,3 +108,9 @@ export const SuccessGetSinglStory = (data) => {
     }
 }
 
+export const SuccessEditOrder = (data) => {
+    return {
+        type: 'SuccessEditOrder',
+        data
+    }
+}

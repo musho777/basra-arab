@@ -4,10 +4,14 @@ import { AddTeam } from '../AddTeam'
 import './style.css'
 import { useEffect, useState } from 'react'
 import { Loading } from '../../Components/Loading'
+import { EditOrder } from '../EditOrder'
 
 export const Profile = () => {
     const [selectedBanner, setSelectedBanner] = useState(1)
     const [stories, setStories] = useState([])
+    const [openEditORder, setOpenEditORder] = useState(false)
+    const [activeId, setActiveId] = useState()
+
     const [headerImages, setHeaderImages] = useState([
         {
             image: 'img.png',
@@ -147,11 +151,19 @@ export const Profile = () => {
                 open={openTeam}
                 setOpen={setOpenTeam}
             />
+            {openEditORder && <EditOrder
+                open={openEditORder}
+                setOpen={setOpenEditORder}
+                id={activeId}
+            />}
             <section className='storiesBlock'>
                 <h1>قصص</h1>
                 {!getStoryTeam.deletLoading ? <div className='stories'>
                     {stories?.length > 0 && stories?.map((e, i) => (
-                        <div className='eachStory' key={i}>
+                        <div onClick={() => {
+                            setActiveId(e.id)
+                            setOpenEditORder(true)
+                        }} className='eachStory' key={i}>
                             <div className='eachStoryImg'>
                                 <img alt='' src={`https://basrabackend.justcode.am/uploads/${e.photo}`} />
                             </div>
@@ -160,8 +172,6 @@ export const Profile = () => {
                                 x
                             </div>
                         </div>
-
-
                     ))}
                     <div className='eachStory'>
                         <img onClick={() => setOpenTeam(true)} alt='' src={require('../../assets/images/add.png')} />

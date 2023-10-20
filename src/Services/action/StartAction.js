@@ -99,3 +99,9 @@ export const StartGetSinglStory = () => {
         type: 'StartGetSinglStory'
     }
 }
+
+export const StartEditOrder = () => {
+    return {
+        type: 'StartEditOrder'
+    }
+}

@@ -1,6 +1,6 @@
-import { StartCreatPorduct, StartCreataStoryTeam, StartCreateCategory, StartDeletCategory, StartDeletStoryTeam, StartGetBreands, StartGetCategory, StartGetCollections, StartGetForAge, StartGetGenders, StartGetPlatofrms, StartGetProducts, StartGetSinglProfil, StartGetSinglStory, StartGetStoryTeam, StartLogin, StartUpdateProduct } from "./StartAction";
+import { StartCreatPorduct, StartCreataStoryTeam, StartCreateCategory, StartDeletCategory, StartDeletStoryTeam, StartEditOrder, StartGetBreands, StartGetCategory, StartGetCollections, StartGetForAge, StartGetGenders, StartGetPlatofrms, StartGetProducts, StartGetSinglProfil, StartGetSinglStory, StartGetStoryTeam, StartLogin, StartUpdateProduct } from "./StartAction";
 import { SuccessCreatProduct, SuccessCreateCategory, SuccessCreateStoryTeam, SuccessDelectCategory, SuccessGetBreand, SuccessGetCategory, SuccessGetCollections, SuccessGetForAge, SuccessGetGenders, SuccessGetPlatforms, SuccessGetProducts, SuccessGetSinglProfil, SuccessGetSinglStory, SuccessGetStoryTeam, SuccessLogin, SuccessUpdateCategory, SuccessUpdateProduct } from "./SuccessAction"
-import { ErrorCreatCategory, ErrorCreatProduct, ErrorCreatStoryTeam, ErrorDeletCategory, ErrorGetBreand, ErrorGetCategory, ErrorGetCollections, ErrorGetForAge, ErrorGetGenders, ErrorGetPlatforms, ErrorGetPorducts, ErrorGetSinglProfil, ErrorGetSinglStory, ErrorGetStoryTeam, ErrorLogin, ErrorUpdateCategory, ErrorUpdateProduct } from "./errorAction";
+import { ErrorCreatCategory, ErrorCreatProduct, ErrorCreatStoryTeam, ErrorDeletCategory, ErrorEditOrder, ErrorGetBreand, ErrorGetCategory, ErrorGetCollections, ErrorGetForAge, ErrorGetGenders, ErrorGetPlatforms, ErrorGetPorducts, ErrorGetSinglProfil, ErrorGetSinglStory, ErrorGetStoryTeam, ErrorLogin, ErrorUpdateCategory, ErrorUpdateProduct } from "./errorAction";
 
 let api = 'https://basrabackend.justcode.am/api/admin'
 let api2 = 'https://basrabackend.justcode.am/api'
@@ -613,7 +613,6 @@ export const DeleteStoryTeamAction = (data) => {
         fetch(`${api}/delete_story_theme`, requestOptions)
             .then((r) => r.json())
             .then(r => {
-                console.log(r)
                 if (r.status) {
                     dispatch(GetStoryTeamAction())
                 }
@@ -653,5 +652,40 @@ export const SinglStoryAction = (data) => {
             .catch((error) => {
                 dispatch(ErrorGetSinglStory())
             });
+    }
+}
+
+export const EditStoryOrder = (data) => {
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+    myHeaders.append('Authorization', `Bearer ${token}`);
+    var requestOptions = {
+        method: 'POST',
+        headers: myHeaders,
+        body: JSON.stringify(data),
+    };
+    return (dispatch) => {
+        dispatch(StartEditOrder())
+        fetch(`${api}/change_order_for_story`, requestOptions)
+            .then((r) => r.json())
+            .then(r => {
+                if (r.status) {
+                    dispatch(GetStoryTeamAction())
+                    dispatch(SuccessGetSinglStory(r.data))
+                }
+                else {
+                    dispatch(ErrorEditOrder())
+
+                }
+            })
+            .catch((error) => {
+                dispatch(ErrorEditOrder())
+            });
+    }
+}
+
+export const ClearEditOrder = () => {
+    return {
+        type: "ClearEditOrder"
     }
 }
