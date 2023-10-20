@@ -105,3 +105,9 @@ export const StartEditOrder = () => {
         type: 'StartEditOrder'
     }
 }
+
+export const StartGetSlider = () => {
+    return {
+        type: "StartGetSlider"
+    }
+}

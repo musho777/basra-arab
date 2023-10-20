@@ -1,6 +1,6 @@
-import { StartCreatPorduct, StartCreataStoryTeam, StartCreateCategory, StartDeletCategory, StartDeletStoryTeam, StartEditOrder, StartGetBreands, StartGetCategory, StartGetCollections, StartGetForAge, StartGetGenders, StartGetPlatofrms, StartGetProducts, StartGetSinglProfil, StartGetSinglStory, StartGetStoryTeam, StartLogin, StartUpdateProduct } from "./StartAction";
-import { SuccessCreatProduct, SuccessCreateCategory, SuccessCreateStoryTeam, SuccessDelectCategory, SuccessGetBreand, SuccessGetCategory, SuccessGetCollections, SuccessGetForAge, SuccessGetGenders, SuccessGetPlatforms, SuccessGetProducts, SuccessGetSinglProfil, SuccessGetSinglStory, SuccessGetStoryTeam, SuccessLogin, SuccessUpdateCategory, SuccessUpdateProduct } from "./SuccessAction"
-import { ErrorCreatCategory, ErrorCreatProduct, ErrorCreatStoryTeam, ErrorDeletCategory, ErrorEditOrder, ErrorGetBreand, ErrorGetCategory, ErrorGetCollections, ErrorGetForAge, ErrorGetGenders, ErrorGetPlatforms, ErrorGetPorducts, ErrorGetSinglProfil, ErrorGetSinglStory, ErrorGetStoryTeam, ErrorLogin, ErrorUpdateCategory, ErrorUpdateProduct } from "./errorAction";
+import { StartCreatPorduct, StartCreataStoryTeam, StartCreateCategory, StartDeletCategory, StartDeletStoryTeam, StartEditOrder, StartGetBreands, StartGetCategory, StartGetCollections, StartGetForAge, StartGetGenders, StartGetPlatofrms, StartGetProducts, StartGetSinglProfil, StartGetSinglStory, StartGetSlider, StartGetStoryTeam, StartLogin, StartUpdateProduct } from "./StartAction";
+import { SuccessCreatProduct, SuccessCreateCategory, SuccessCreateStoryTeam, SuccessDelectCategory, SuccessGetBreand, SuccessGetCategory, SuccessGetCollections, SuccessGetForAge, SuccessGetGenders, SuccessGetPlatforms, SuccessGetProducts, SuccessGetSinglProfil, SuccessGetSinglStory, SuccessGetSlider, SuccessGetStoryTeam, SuccessLastSlider, SuccessLogin, SuccessUpdateCategory, SuccessUpdateProduct } from "./SuccessAction"
+import { ErrorCreatCategory, ErrorCreatProduct, ErrorCreatStoryTeam, ErrorDeletCategory, ErrorEditOrder, ErrorGetBreand, ErrorGetCategory, ErrorGetCollections, ErrorGetForAge, ErrorGetGenders, ErrorGetPlatforms, ErrorGetPorducts, ErrorGetSinglProfil, ErrorGetSinglStory, ErrorGetSlider, ErrorGetStoryTeam, ErrorLogin, ErrorUpdateCategory, ErrorUpdateProduct } from "./errorAction";
 
 let api = 'https://basrabackend.justcode.am/api/admin'
 let api2 = 'https://basrabackend.justcode.am/api'
@@ -687,5 +687,92 @@ export const EditStoryOrder = (data) => {
 export const ClearEditOrder = () => {
     return {
         type: "ClearEditOrder"
+    }
+}
+
+export const CreatBannerAction = (data) => {
+    var myHeaders = new Headers();
+    myHeaders.append('Authorization', `Bearer ${token}`);
+    var formdata = new FormData();
+    formdata.append("slider", data.type);
+    formdata.append("file[]", data.img);
+    var requestOptions = {
+        method: 'POST',
+        headers: myHeaders,
+        body: formdata,
+        redirect: 'follow'
+    };
+    return (dispatch) => {
+        dispatch(StartCreataStoryTeam())
+        fetch(`${api}/create_baner`, requestOptions)
+            .then((r) => r.json())
+            .then(r => {
+                if (r.status) {
+                    dispatch(GetSliderAction(data.type))
+                }
+                else {
+                }
+            })
+            .catch((error) => {
+            });
+    }
+}
+
+export const GetSliderAction = (data) => {
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+    myHeaders.append('Authorization', `Bearer ${token}`);
+
+    var requestOptions = {
+        method: 'POST',
+        headers: myHeaders,
+    };
+    return (dispatch) => {
+        dispatch(StartGetSlider())
+        fetch(`${api}/get_slider?slider=${data}`, requestOptions)
+            .then((r) => r.json())
+            .then(r => {
+                if (r.status) {
+                    if (data === 'first') {
+                        dispatch(SuccessGetSlider(r.data))
+                    }
+                    else {
+                        console.log(r)
+                        dispatch(SuccessLastSlider(r.data))
+                    }
+
+                }
+                else {
+                    dispatch(ErrorGetSlider())
+                }
+            })
+            .catch((error) => {
+                dispatch(ErrorGetSlider())
+            });
+    }
+}
+
+export const DeletSlideAction = (data, type) => {
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+    myHeaders.append('Authorization', `Bearer ${token}`);
+    var requestOptions = {
+        method: 'POST',
+        headers: myHeaders,
+        body: JSON.stringify(data),
+    };
+    return (dispatch) => {
+        // dispatch(StartDeletStoryTeam())
+        fetch(`${api}/delete_baner`, requestOptions)
+            .then((r) => r.json())
+            .then(r => {
+                if (r.status) {
+                    dispatch(GetSliderAction(type))
+                }
+                else {
+                }
+            })
+            .catch((error) => {
+            });
     }
 }

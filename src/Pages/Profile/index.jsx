@@ -1,16 +1,20 @@
 import { useDispatch, useSelector } from 'react-redux'
-import { DeleteStoryTeamAction, GetStoryTeamAction } from '../../Services/action/action'
+import { DeleteStoryTeamAction, GetSliderAction, GetStoryTeamAction } from '../../Services/action/action'
 import { AddTeam } from '../AddTeam'
 import './style.css'
 import { useEffect, useState } from 'react'
 import { Loading } from '../../Components/Loading'
 import { EditOrder } from '../EditOrder'
+import { AddBanner } from '../AddBanner'
 
 export const Profile = () => {
     const [selectedBanner, setSelectedBanner] = useState(1)
     const [stories, setStories] = useState([])
     const [openEditORder, setOpenEditORder] = useState(false)
     const [activeId, setActiveId] = useState()
+    const [openAddBanner, setOpenAddBanner] = useState(false)
+    const [banerType, setBanerType] = useState('first')
+    const { getSlider } = useSelector((st) => st)
 
     const [headerImages, setHeaderImages] = useState([
         {
@@ -47,73 +51,8 @@ export const Profile = () => {
             image: 'img.png',
         },
     ])
-    const [secondImages, setSecondImages] = useState([
-        {
-            image: 'img.png',
-        },
-        {
-            image: 'img.png',
-        },
-        {
-            image: 'img.png',
-        },
-        {
-            image: 'img.png',
-        },
-        {
-            image: 'img.png',
-        },
-        {
-            image: 'img.png',
-        },
-        {
-            image: 'img.png',
-        },
-        {
-            image: 'img.png',
-        },
-        {
-            image: 'img.png',
-        },
-        {
-            image: 'img.png',
-        },
-        {
-            image: 'img.png',
-        },
-    ])
-    const [brands, setBrands] = useState([
-        {
-            image: 'img.png',
-        },
-        {
-            image: 'img.png',
-        },
-        {
-            image: 'img.png',
-        },
-        {
-            image: 'img.png',
-        },
-        {
-            image: 'img.png',
-        },
-        {
-            image: 'img.png',
-        },
-        {
-            image: 'img.png',
-        },
-        {
-            image: 'img.png',
-        },
-        {
-            image: 'img.png',
-        },
-        {
-            image: 'img.png',
-        },
-    ])
+    const [secondImages, setSecondImages] = useState([])
+    const [brands, setBrands] = useState([])
     const [categories, setCategories] = useState([
         {
             image: 'img.png',
@@ -142,9 +81,22 @@ export const Profile = () => {
     useEffect(() => {
         if (getStoryTeam.data) {
             setStories(getStoryTeam?.data)
+            setBrands(getStoryTeam.lastSlider)
         }
     }, [getStoryTeam])
 
+    useEffect(() => {
+        dispatch(GetSliderAction("first"))
+        dispatch(GetSliderAction("last"))
+    }, [])
+
+    console.log(getSlider, 'getSlider')
+
+    useEffect(() => {
+        setSecondImages(getSlider.data)
+        setBrands(getSlider.lastSlider)
+    }, [getSlider])
+    console.log(brands?.length)
     return (
         <div className='profile'>
             <AddTeam
@@ -156,6 +108,13 @@ export const Profile = () => {
                 setOpen={setOpenEditORder}
                 id={activeId}
             />}
+            {openAddBanner &&
+                <AddBanner
+                    open={openAddBanner}
+                    setOpen={setOpenAddBanner}
+                    type={banerType}
+                />
+            }
             <section className='storiesBlock'>
                 <h1>قصص</h1>
                 {!getStoryTeam.deletLoading ? <div className='stories'>
@@ -181,7 +140,6 @@ export const Profile = () => {
                 }
 
             </section>
-
             <section className='banners'>
                 <h1>لافتات</h1>
                 <div className='bannerButtons'>
@@ -205,19 +163,39 @@ export const Profile = () => {
             <section className='siteHeaderBlock'>
                 <h1>الكتلة الثانية</h1>
                 <div className='siteHeader'>
-                    {secondImages?.length > 0 && secondImages?.map((e, i) => (
-                        <img alt='' src={require(`../../assets/images/${e?.image}`)} key={i} />
-                    ))}
+                    {secondImages?.length > 0 && secondImages?.map((e, i) => {
+                        console.log(e.type)
+                        if (e.type == 'mp4') {
+                            return <video width="300" height="200" controls>
+                                <source src={`https://basrabackend.justcode.am/uploads/${e?.file}`} type="video/mp4" />
+                            </video>
+                        }
+                        return <img alt='' src={`https://basrabackend.justcode.am/uploads/${e?.file}`} key={i} />
+                    })}
+                    <div onClick={() => {
+                        setOpenAddBanner(true)
+                        setBanerType('first')
+                    }} className='siteHeader' style={{ width: '140px' }}>
+                        <img alt='' src={require('../../assets/images/add.png')} className='addHeader' />
+                    </div>
                 </div>
             </section>
 
             <section className='siteHeaderBlock'>
                 <h1>العلامات التجارية</h1>
                 <div className='siteHeader'>
-                    {brands?.length > 0 && brands?.map((e, i) => (
-                        <img alt='' src={require(`../../assets/images/${e?.image}`)} key={i} />
-                    ))}
-                    <div className='siteHeader' style={{ width: '140px' }}>
+                    {brands?.length > 0 && brands?.map((e, i) => {
+                        if (e.type == 'mp4') {
+                            return <video width="300" height="200" controls>
+                                <source src={`https://basrabackend.justcode.am/uploads/${e?.file}`} type="video/mp4" />
+                            </video>
+                        }
+                        return <img alt='' src={`https://basrabackend.justcode.am/uploads/${e?.file}`} key={i} />
+                    })}
+                    <div onClick={() => {
+                        setOpenAddBanner(true)
+                        setBanerType('last')
+                    }} className='siteHeader' style={{ width: '140px' }}>
                         <img alt='' src={require('../../assets/images/add.png')} className='addHeader' />
                     </div>
                 </div>

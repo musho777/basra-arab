@@ -100,3 +100,9 @@ export const ErrorEditOrder = () => {
         type: 'ErrorEditOrder'
     }
 }
+
+export const ErrorGetSlider = () => {
+    return {
+        type: 'ErrorGetSlider'
+    }
+}

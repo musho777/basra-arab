@@ -114,3 +114,17 @@ export const SuccessEditOrder = (data) => {
         data
     }
 }
+
+export const SuccessGetSlider = (data) => {
+    return {
+        type: "SuccessGetSlider",
+        data
+    }
+}
+
+export const SuccessLastSlider = (data) => {
+    return {
+        type: 'SuccessLastSlider',
+        data
+    }
+}
