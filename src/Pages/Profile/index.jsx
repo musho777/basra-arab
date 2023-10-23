@@ -7,6 +7,10 @@ import { Loading } from '../../Components/Loading'
 import { EditOrder } from '../EditOrder'
 import { AddBanner } from '../AddBanner'
 
+import Stories from 'react-insta-stories';
+import { Story } from '../../Components/Story'
+import { AddStory } from '../AddStory'
+
 export const Profile = () => {
     const [selectedBanner, setSelectedBanner] = useState(1)
     const [stories, setStories] = useState([])
@@ -71,6 +75,9 @@ export const Profile = () => {
         },
     ])
 
+    const [openStory, setOpenStory] = useState(false)
+    const [openAddStory, setOpenAddStory] = useState(false)
+
     const [openTeam, setOpenTeam] = useState(false)
     const { getStoryTeam } = useSelector((st) => st)
     const dispatch = useDispatch()
@@ -90,13 +97,20 @@ export const Profile = () => {
         dispatch(GetSliderAction("last"))
     }, [])
 
-    console.log(getSlider, 'getSlider')
+
 
     useEffect(() => {
         setSecondImages(getSlider.data)
         setBrands(getSlider.lastSlider)
     }, [getSlider])
-    console.log(brands?.length)
+    useEffect(() => {
+        if (openStory) {
+            document.body.style.overflow = 'hidden';
+        }
+        else {
+            document.body.style.overflow = 'auto';
+        }
+    }, [openStory])
     return (
         <div className='profile'>
             <AddTeam
@@ -115,13 +129,29 @@ export const Profile = () => {
                     type={banerType}
                 />
             }
+            {openAddStory &&
+                <AddStory
+                    open={openAddStory}
+                    setOpen={setOpenAddStory}
+                    type={activeId}
+                />
+            }
+            {openStory &&
+                <Story
+                    activeId={activeId}
+                    open={openStory}
+                    setOpen={(setOpenStory)}
+                    setOpenEditORder={setOpenEditORder}
+                    setOpenAddStory={setOpenAddStory}
+                />
+            }
             <section className='storiesBlock'>
                 <h1>قصص</h1>
                 {!getStoryTeam.deletLoading ? <div className='stories'>
                     {stories?.length > 0 && stories?.map((e, i) => (
                         <div onClick={() => {
                             setActiveId(e.id)
-                            setOpenEditORder(true)
+                            setOpenStory(true)
                         }} className='eachStory' key={i}>
                             <div className='eachStoryImg'>
                                 <img alt='' src={`https://basrabackend.justcode.am/uploads/${e.photo}`} />
@@ -164,7 +194,6 @@ export const Profile = () => {
                 <h1>الكتلة الثانية</h1>
                 <div className='siteHeader'>
                     {secondImages?.length > 0 && secondImages?.map((e, i) => {
-                        console.log(e.type)
                         if (e.type == 'mp4') {
                             return <video width="300" height="200" controls>
                                 <source src={`https://basrabackend.justcode.am/uploads/${e?.file}`} type="video/mp4" />

@@ -2,27 +2,35 @@ import { useEffect, useState } from 'react'
 import Button from '@mui/material/Button'
 import { styled } from '@mui/material/styles'
 import { useDispatch, useSelector } from 'react-redux'
-import { CreatBannerAction, DeletSlideAction, GetCategory } from '../../Services/action/action'
+import { AddPhotoOrVidioStroyMedia, DeletStroyMedia, SinglStoryAction } from '../../Services/action/action'
 import { Loading } from '../../Components/Loading'
 
-export const AddBanner = ({ open, setOpen, type }) => {
+export const AddStory = ({ open, setOpen, type }) => {
     const [categories, setCategories] = useState([])
-    const { getSlider } = useSelector((st) => st)
+    const { getSinglStory } = useSelector((st) => st)
     const [fileType, setFileType] = useState('')
+    const [storyItem, setStoryItem] = useState([])
+
     useEffect(() => {
-        if (type == 'first') {
-            setCategories(getSlider?.data)
+        dispatch(SinglStoryAction({ story_id: type }))
+    }, [])
+    useEffect(() => {
+        let item = []
+        setCategories(getSinglStory.data.file)
+        if (getSinglStory?.data?.file?.length) {
+            getSinglStory?.data?.file?.map((elm, i) => {
+                item.push(elm.file)
+            })
+
         }
-        else {
-            setCategories(getSlider?.lastSlider)
-        }
-        if (getSlider.status) {
+        if (getSinglStory.status) {
             setNewCategory({
                 name: '',
                 image: '',
             })
         }
-    }, [getSlider])
+        setStoryItem(item)
+    }, [getSinglStory])
 
     const [newCategory, setNewCategory] = useState({
         image: '',
@@ -66,7 +74,7 @@ export const AddBanner = ({ open, setOpen, type }) => {
     }
 
     function handleNewCategory() {
-        dispatch(CreatBannerAction({ type, img }))
+        dispatch(AddPhotoOrVidioStroyMedia({ type, img }))
     }
 
     function close() {
@@ -77,16 +85,16 @@ export const AddBanner = ({ open, setOpen, type }) => {
     }
 
     const DeletCategory = (id) => {
-        dispatch(DeletSlideAction({ banner_id: id }, type))
+        dispatch(DeletStroyMedia({ file_id: id }, type))
     }
 
     return (
         <div className={open ? 'activePopup activeSecondaryPopup' : 'inactive'}>
             <div className='pop secondaryPop'>
                 <div className='popTitle'>
-                    <h1>Категории</h1>
+                    <h1>Add story</h1>
                 </div>
-                {!getSlider.loading ? <div className='popupContent'>
+                {!getSinglStory.loading ? <div className='popupContent'>
                     {categories?.length > 0 && categories?.map((e, i) => {
                         let file = 'image'
                         if (e.type === 'mp4') {

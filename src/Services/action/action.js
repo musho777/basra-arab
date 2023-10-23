@@ -737,7 +737,6 @@ export const GetSliderAction = (data) => {
                         dispatch(SuccessGetSlider(r.data))
                     }
                     else {
-                        console.log(r)
                         dispatch(SuccessLastSlider(r.data))
                     }
 
@@ -768,6 +767,59 @@ export const DeletSlideAction = (data, type) => {
             .then(r => {
                 if (r.status) {
                     dispatch(GetSliderAction(type))
+                }
+                else {
+                }
+            })
+            .catch((error) => {
+            });
+    }
+}
+export const AddPhotoOrVidioStroyMedia = (data) => {
+    var myHeaders = new Headers();
+    myHeaders.append('Authorization', `Bearer ${token}`);
+    var formdata = new FormData();
+    formdata.append("story_id", data.type);
+    formdata.append("file[]", data.img);
+    var requestOptions = {
+        method: 'POST',
+        headers: myHeaders,
+        body: formdata,
+        redirect: 'follow'
+    };
+    return (dispatch) => {
+        // dispatch(StartCreataStoryTeam())
+        fetch(`${api}/add_photo_or_video_in_story`, requestOptions)
+            .then((r) => r.json())
+            .then(r => {
+                if (r.status) {
+                    dispatch(SinglStoryAction({ story_id: data.type }))
+                }
+                else {
+                }
+            })
+            .catch((error) => {
+            });
+    }
+}
+
+export const DeletStroyMedia = (data, type) => {
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+    myHeaders.append('Authorization', `Bearer ${token}`);
+    var requestOptions = {
+        method: 'POST',
+        headers: myHeaders,
+        body: JSON.stringify(data),
+    };
+    return (dispatch) => {
+        // dispatch(StartDeletStoryTeam())
+        fetch(`${api}/delete_photo_or_video_in_story`, requestOptions)
+            .then((r) => r.json())
+            .then(r => {
+                if (r.status) {
+                    dispatch(SinglStoryAction({ story_id: type }))
+                    // dispatch(GetSliderAction(type))
                 }
                 else {
                 }

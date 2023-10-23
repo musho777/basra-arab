@@ -23,7 +23,7 @@ export const EditOrder = ({ open, setOpen, id }) => {
 
     useEffect(() => {
         if (editStoryOrder.status) {
-            close(false)
+            // close(false)
             dispatch(ClearEditOrder())
         }
     }, [editStoryOrder])
