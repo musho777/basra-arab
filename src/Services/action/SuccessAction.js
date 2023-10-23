@@ -128,3 +128,10 @@ export const SuccessLastSlider = (data) => {
         data
     }
 }
+
+export const SuccessGetChatRedcuer = (data) => {
+    return {
+        type: 'SuccessGetChatRedcuer',
+        data
+    }
+}

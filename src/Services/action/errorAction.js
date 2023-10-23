@@ -106,3 +106,9 @@ export const ErrorGetSlider = () => {
         type: 'ErrorGetSlider'
     }
 }
+
+export const ErrorGetReducer = () => {
+    return {
+        type: 'ErrorGetReducer'
+    }
+}

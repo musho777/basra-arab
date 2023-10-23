@@ -111,3 +111,9 @@ export const StartGetSlider = () => {
         type: "StartGetSlider"
     }
 }
+
+export const StartGetChatReducer = () => {
+    return {
+        type: 'StartGetChatReducer'
+    }
+}

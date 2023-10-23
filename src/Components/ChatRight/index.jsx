@@ -23,17 +23,16 @@ export const ChatRight = ({ currentMember }) => {
             read: false,
         },
     ])
-
     return (
         <div className='chatRight'>
             {Object.keys(currentMember)?.length
                 ? <section className='chatRight'>
                     <div className='chatTop' >
-                        {currentMember?.image
-                            ? <img alt='' src={require(`../../assets/images/${currentMember?.image}`)} />
-                            : <div className='noImageChat'>{currentMember?.name?.split('')[0]}</div>
+                        {currentMember?.sender?.avatar
+                            ? <img alt='' src={`https://basrabackend.justcode.am/uploads/${currentMember?.sender?.avatar}`} />
+                            : <div className='noImageChat'>{currentMember.sender?.name?.split('')[0]}</div>
                         }
-                        <span>{currentMember?.name}</span>
+                        <span>{currentMember?.sender?.name}</span>
                     </div>
 
                     <div className='chatMessages'>

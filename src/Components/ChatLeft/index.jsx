@@ -1,106 +1,80 @@
+import { useDispatch, useSelector } from 'react-redux'
 import './style.css'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { GetMyChatRoom } from '../../Services/action/action'
+import { Loading } from '../Loading'
 
 export const ChatLeft = ({ currentMember, setCurrentMember }) => {
-    const [chatMembers, setChatMembers] = useState([
-        {
-            id: 1,
-            image: 'Jessica.png',
-            name: 'Jessica Drew',
-            lastMessage: {
-                from: 'Jessica Drew',
-                image: null,
-                message: 'Ok, see you later 🎉',
-                time: '18:30',
-            },
-            unreadMessageCount: '2',
-            groupChat: false,
-        },
-        {
-            id: 2,
-            image: 'David.png',
-            name: 'David Moore',
-            lastMessage: {
-                from: 'me',
-                image: null,
-                message: `i don't remember anything 😄`,
-                time: '18:16',
-            },
-            unreadMessageCount: '0',
-            groupChat: false,
-        },
-        {
-            id: 3,
-            image: null,
-            name: 'Announcements',
-            lastMessage: {
-                from: '',
-                image: null,
-                message: '',
-                time: '17:15',
-            },
-            unreadMessageCount: '0',
-            groupChat: true,
-        },
-        {
-            id: 4,
-            image: 'officechat.png',
-            name: 'Office Chat',
-            lastMessage: {
-                from: 'Lewis',
-                image: null,
-                message: `All done mate 😆`,
-                time: 'Wed',
-            },
-            unreadMessageCount: '0',
-            groupChat: true,
-        },
-        {
-            id: 5,
-            image: 'artClass.png',
-            name: 'Art Class',
-            lastMessage: {
-                from: 'Emily',
-                image: 'art.png',
-                message: `Editorial`,
-                time: 'Tue',
-            },
-            unreadMessageCount: '0',
-            groupChat: true,
-        },
-    ])
-
+    const [search, setSearch] = useState('')
+    const { chatRoom } = useSelector((st) => st)
+    const [chatMembers, setChatMembers] = useState([])
+    const dispatch = useDispatch()
+    useEffect(() => {
+        dispatch(GetMyChatRoom(search))
+    }, [])
+    useEffect(() => {
+        setChatMembers(chatRoom.data)
+    }, [chatRoom])
+    if (chatRoom.loading) {
+        return <Loading />
+    }
     return (
         <section className='chatLeft'>
             {chatMembers?.length > 0
-                ? chatMembers?.map((e, i) => (
-                    <div className='eachChatMember' key={i} onClick={() => setCurrentMember(e)} style={currentMember?.id === e?.id ? { background: '#d9d9d9' } : {}}>
+                ? chatMembers?.map((e, i) => {
+                    let date = new Date(e.created_at);
+                    let today = new Date()
+                    let day = date.getDate()
+                    let mount = date.getMonth()
+                    let houre = date.getHours()
+                    let minute = date.getMinutes()
+                    let Datee = ''
+                    if (day < 10) {
+                        day = `0${day}`
+                    }
+                    if (mount < 10) {
+                        mount = `0${mount}`
+                    }
+                    if (houre < 10) {
+                        houre = `0${houre}`
+                    }
+                    if (minute) {
+                        minute = `0${minute}`
+                    }
+                    if (date.getDate() == today.getDate()) {
+                        Datee = `${houre}:${minute}`
+                    }
+                    else {
+                        Datee = `${day}.${mount}`
+                    }
+                    let from = e.sender_id == 1
+                    return <div className='eachChatMember' key={i} onClick={() => setCurrentMember(e)} style={currentMember?.id === e?.id ? { background: '#d9d9d9' } : {}}>
                         <div className='eachMemberLeft'>
-                            {e?.image
-                                ? <img alt='' src={require(`../../assets/images/${e?.image}`)} />
+                            {e?.sender?.avatar
+                                ? <img alt='' src={`https://basrabackend.justcode.am/uploads/${e?.sender?.avatar}`} />
                                 : <div className='noImageChat'>{e?.name?.split('')[0]}</div>
                             }
                             <div className='memberName'>
-                                <p>{e?.name?.length > 20 ? e?.name?.slice(0, 20) + '...' : e?.name}</p>
+                                <p>{e?.sender?.name?.length > 20 ? e.sender?.name?.slice(0, 20) + '...' : e?.sender?.name}</p>
                                 {e?.groupChat
                                     ? e?.lastMessage?.image
-                                        ? <h6>{e?.lastMessage?.from}: <img alt='' src={require(`../../assets/images/${e?.lastMessage?.image}`)} /> <span className='lastMessage'>{e?.lastMessage?.message?.length > 35 ? e?.lastMessage?.message.slice(0, 35) + '...' : e?.lastMessage?.message}</span></h6>
-                                        : <h6>{e?.lastMessage?.from ? `${e?.lastMessage?.from}:` : ''} <span className='lastMessage'>{e?.lastMessage?.message ? e?.lastMessage?.message?.length > 25 ? e?.lastMessage?.message.slice(0, 25) + '...' : e?.lastMessage?.message : "Channel Created"}</span></h6>
-                                    : e?.lastMessage?.from === e?.name
-                                        ? <span className='lastMessage'>{e?.lastMessage?.message?.length > 35 ? e?.lastMessage?.message.slice(0, 35) + '...' : e?.lastMessage?.message}</span>
-                                        : <span className='lastMessage'>You: {e?.lastMessage?.message?.length > 35 ? e?.lastMessage?.message.slice(0, 35) + '...' : e?.lastMessage?.message}</span>
+                                        ? <h6>{from}: <img alt='' src={require(`../../assets/images/${e?.lastMessage?.image}`)} /> <span className='lastMessage'>{e?.lastMessage?.message?.length > 35 ? e?.lastMessage?.message.slice(0, 35) + '...' : e?.lastMessage?.message}</span></h6>
+                                        : <h6>{from ? `${from}:` : ''} <span className='lastMessage'>{e?.lastMessage?.message ? e?.lastMessage?.message?.length > 25 ? e?.lastMessage?.message.slice(0, 25) + '...' : e?.lastMessage?.message : "Channel Created"}</span></h6>
+                                    : !from
+                                        ? <span className='lastMessage'>{e?.message?.length > 35 ? e?.message.slice(0, 35) + '...' : e?.message}</span>
+                                        : <span className='lastMessage'>You: {e?.message?.length > 35 ? e?.message.slice(0, 35) + '...' : e?.message}</span>
                                 }
                             </div>
                         </div>
                         <div className='eachMemberRight'>
-                            <span>{e?.lastMessage?.time}</span>
-                            {e?.unreadMessageCount > 0
-                                ? <div className='messageCount'>{e?.unreadMessageCount}</div>
+                            <span>{Datee}</span>
+                            {e?.message_sum > 0
+                                ? <div className='messageCount'>{e?.message_sum}</div>
                                 : <div />
                             }
                         </div>
                     </div>
-                ))
+                })
                 : <span>No chat members</span>
             }
         </section>

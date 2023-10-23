@@ -1,6 +1,6 @@
-import { StartCreatPorduct, StartCreataStoryTeam, StartCreateCategory, StartDeletCategory, StartDeletStoryTeam, StartEditOrder, StartGetBreands, StartGetCategory, StartGetCollections, StartGetForAge, StartGetGenders, StartGetPlatofrms, StartGetProducts, StartGetSinglProfil, StartGetSinglStory, StartGetSlider, StartGetStoryTeam, StartLogin, StartUpdateProduct } from "./StartAction";
-import { SuccessCreatProduct, SuccessCreateCategory, SuccessCreateStoryTeam, SuccessDelectCategory, SuccessGetBreand, SuccessGetCategory, SuccessGetCollections, SuccessGetForAge, SuccessGetGenders, SuccessGetPlatforms, SuccessGetProducts, SuccessGetSinglProfil, SuccessGetSinglStory, SuccessGetSlider, SuccessGetStoryTeam, SuccessLastSlider, SuccessLogin, SuccessUpdateCategory, SuccessUpdateProduct } from "./SuccessAction"
-import { ErrorCreatCategory, ErrorCreatProduct, ErrorCreatStoryTeam, ErrorDeletCategory, ErrorEditOrder, ErrorGetBreand, ErrorGetCategory, ErrorGetCollections, ErrorGetForAge, ErrorGetGenders, ErrorGetPlatforms, ErrorGetPorducts, ErrorGetSinglProfil, ErrorGetSinglStory, ErrorGetSlider, ErrorGetStoryTeam, ErrorLogin, ErrorUpdateCategory, ErrorUpdateProduct } from "./errorAction";
+import { StartCreatPorduct, StartCreataStoryTeam, StartCreateCategory, StartDeletCategory, StartDeletStoryTeam, StartEditOrder, StartGetBreands, StartGetCategory, StartGetChatReducer, StartGetCollections, StartGetForAge, StartGetGenders, StartGetPlatofrms, StartGetProducts, StartGetSinglProfil, StartGetSinglStory, StartGetSlider, StartGetStoryTeam, StartLogin, StartUpdateProduct } from "./StartAction";
+import { SuccessCreatProduct, SuccessCreateCategory, SuccessCreateStoryTeam, SuccessDelectCategory, SuccessGetBreand, SuccessGetCategory, SuccessGetChatRedcuer, SuccessGetCollections, SuccessGetForAge, SuccessGetGenders, SuccessGetPlatforms, SuccessGetProducts, SuccessGetSinglProfil, SuccessGetSinglStory, SuccessGetSlider, SuccessGetStoryTeam, SuccessLastSlider, SuccessLogin, SuccessUpdateCategory, SuccessUpdateProduct } from "./SuccessAction"
+import { ErrorCreatCategory, ErrorCreatProduct, ErrorCreatStoryTeam, ErrorDeletCategory, ErrorEditOrder, ErrorGetBreand, ErrorGetCategory, ErrorGetCollections, ErrorGetForAge, ErrorGetGenders, ErrorGetPlatforms, ErrorGetPorducts, ErrorGetReducer, ErrorGetSinglProfil, ErrorGetSinglStory, ErrorGetSlider, ErrorGetStoryTeam, ErrorLogin, ErrorUpdateCategory, ErrorUpdateProduct } from "./errorAction";
 
 let api = 'https://basrabackend.justcode.am/api/admin'
 let api2 = 'https://basrabackend.justcode.am/api'
@@ -833,6 +833,34 @@ export const DeletStroyMedia = (data, type) => {
                 }
             })
             .catch((error) => {
+            });
+    }
+}
+
+
+export const GetMyChatRoom = (data) => {
+    var myHeaders = new Headers();
+    myHeaders.append('Authorization', `Bearer ${token}`);
+    var requestOptions = {
+        method: 'POST',
+        headers: myHeaders,
+        body: data,
+        redirect: 'follow'
+    };
+    return (dispatch) => {
+        dispatch(StartGetChatReducer())
+        fetch(`${api}/get_my_chat_rooms`, requestOptions)
+            .then((r) => r.json())
+            .then(r => {
+                if (r.status) {
+                    dispatch(SuccessGetChatRedcuer(r.data.data))
+                }
+                else {
+                    dispatch(ErrorGetReducer())
+                }
+            })
+            .catch((error) => {
+                dispatch(ErrorGetReducer())
             });
     }
 }
