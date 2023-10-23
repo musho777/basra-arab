@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux'
-import { DeleteStoryTeamAction, GetSliderAction, GetStoryTeamAction } from '../../Services/action/action'
+import { DeleteStoryTeamAction, GetBrandAction, GetCategory, GetPlatforms, GetSliderAction, GetStoryTeamAction } from '../../Services/action/action'
 import { AddTeam } from '../AddTeam'
 import './style.css'
 import { useEffect, useState } from 'react'
@@ -10,76 +10,34 @@ import { AddBanner } from '../AddBanner'
 import Stories from 'react-insta-stories';
 import { Story } from '../../Components/Story'
 import { AddStory } from '../AddStory'
+import { AddCategory } from '../AddCategory'
+import { AddBrends } from '../AddBrends'
 
 export const Profile = () => {
-    const [selectedBanner, setSelectedBanner] = useState(1)
+    const [selectedBanner, setSelectedBanner] = useState(2)
     const [stories, setStories] = useState([])
     const [openEditORder, setOpenEditORder] = useState(false)
     const [activeId, setActiveId] = useState()
     const [openAddBanner, setOpenAddBanner] = useState(false)
     const [banerType, setBanerType] = useState('first')
     const { getSlider } = useSelector((st) => st)
+    const { getPlatfors } = useSelector((st) => st)
+    const { getCategory } = useSelector((st) => st)
+    const { getBrand } = useSelector((st) => st)
 
-    const [headerImages, setHeaderImages] = useState([
-        {
-            image: 'img.png',
-        },
-        {
-            image: 'img.png',
-        },
-        {
-            image: 'img.png',
-        },
-        {
-            image: 'img.png',
-        },
-        {
-            image: 'img.png',
-        },
-        {
-            image: 'img.png',
-        },
-        {
-            image: 'img.png',
-        },
-        {
-            image: 'img.png',
-        },
-        {
-            image: 'img.png',
-        },
-        {
-            image: 'img.png',
-        },
-        {
-            image: 'img.png',
-        },
-    ])
+    const [headerImages, setHeaderImages] = useState([])
     const [secondImages, setSecondImages] = useState([])
     const [brands, setBrands] = useState([])
-    const [categories, setCategories] = useState([
-        {
-            image: 'img.png',
-        },
-        {
-            image: 'img.png',
-        },
-        {
-            image: 'img.png',
-        },
-        {
-            image: 'img.png',
-        },
-        {
-            image: 'img.png',
-        },
-    ])
+    const [categories, setCategories] = useState([])
 
     const [openStory, setOpenStory] = useState(false)
     const [openAddStory, setOpenAddStory] = useState(false)
+    const [openAddCategory, setOpenAddCategory] = useState(false)
+    const [openCreateBrend, setOpenCreateBrend] = useState(false)
 
     const [openTeam, setOpenTeam] = useState(false)
     const { getStoryTeam } = useSelector((st) => st)
+    const [brnadPage, setBrandPage] = useState(1)
     const dispatch = useDispatch()
     useEffect(() => {
         dispatch(GetStoryTeamAction())
@@ -88,21 +46,37 @@ export const Profile = () => {
     useEffect(() => {
         if (getStoryTeam.data) {
             setStories(getStoryTeam?.data)
-            setBrands(getStoryTeam.lastSlider)
+            setHeaderImages(getStoryTeam.lastSlider)
         }
     }, [getStoryTeam])
 
     useEffect(() => {
-        dispatch(GetSliderAction("first"))
-        dispatch(GetSliderAction("last"))
-    }, [])
+        dispatch(GetSliderAction("first", selectedBanner))
+        dispatch(GetSliderAction("last", selectedBanner))
+        dispatch(GetPlatforms())
+        dispatch(GetCategory(selectedBanner))
+        dispatch(GetBrandAction(1, selectedBanner))
+
+    }, [selectedBanner])
 
 
 
     useEffect(() => {
         setSecondImages(getSlider.data)
-        setBrands(getSlider.lastSlider)
+        setHeaderImages(getSlider.lastSlider)
     }, [getSlider])
+
+
+    useEffect(() => {
+        setCategories(getCategory.data.data)
+    }, [getCategory])
+
+    useEffect(() => {
+        console.log(getBrand.data.data, 'getBrand')
+        setBrands(getBrand?.data?.data?.data)
+    }, [getBrand])
+
+
     useEffect(() => {
         if (openStory) {
             document.body.style.overflow = 'hidden';
@@ -127,6 +101,7 @@ export const Profile = () => {
                     open={openAddBanner}
                     setOpen={setOpenAddBanner}
                     type={banerType}
+                    platformid={selectedBanner}
                 />
             }
             {openAddStory &&
@@ -143,6 +118,21 @@ export const Profile = () => {
                     setOpen={(setOpenStory)}
                     setOpenEditORder={setOpenEditORder}
                     setOpenAddStory={setOpenAddStory}
+                />
+            }
+            {openAddCategory &&
+                <AddCategory
+                    open={openAddCategory}
+                    setOpen={setOpenAddCategory}
+                    platformId={selectedBanner}
+                />
+            }
+            {openCreateBrend &&
+                <AddBrends
+                    open={openCreateBrend}
+                    setOpen={setOpenCreateBrend}
+                    setBrendsPage={(e) => setBrandPage(e)}
+                    platformId={selectedBanner}
                 />
             }
             <section className='storiesBlock'>
@@ -170,28 +160,17 @@ export const Profile = () => {
                 }
 
             </section>
+
             <section className='banners'>
                 <h1>لافتات</h1>
                 <div className='bannerButtons'>
-                    <button className={selectedBanner === 1 ? 'selectedBanner' : 'banner'} onClick={() => setSelectedBanner(1)}>طلب</button>
-                    <button className={selectedBanner === 2 ? 'selectedBanner' : 'banner'} onClick={() => setSelectedBanner(2)}>موقع إلكتروني</button>
+                    <button className={selectedBanner === 2 ? 'selectedBanner' : 'banner'} onClick={() => setSelectedBanner(2)}>طلب</button>
+                    <button className={selectedBanner === 1 ? 'selectedBanner' : 'banner'} onClick={() => setSelectedBanner(1)}>موقع إلكتروني</button>
                 </div>
             </section>
 
             <section className='siteHeaderBlock'>
                 <h1>رأس الموقع</h1>
-                <div className='siteHeader'>
-                    {headerImages?.length > 0 && headerImages?.map((e, i) => (
-                        <img alt='' src={require(`../../assets/images/${e?.image}`)} key={i} />
-                    ))}
-                    <div className='siteHeader' style={{ width: '140px' }}>
-                        <img alt='' src={require('../../assets/images/add.png')} className='addHeader' />
-                    </div>
-                </div>
-            </section>
-
-            <section className='siteHeaderBlock'>
-                <h1>الكتلة الثانية</h1>
                 <div className='siteHeader'>
                     {secondImages?.length > 0 && secondImages?.map((e, i) => {
                         if (e.type == 'mp4') {
@@ -209,11 +188,11 @@ export const Profile = () => {
                     </div>
                 </div>
             </section>
-
             <section className='siteHeaderBlock'>
-                <h1>العلامات التجارية</h1>
+                <h1>الكتلة الثانية</h1>
+
                 <div className='siteHeader'>
-                    {brands?.length > 0 && brands?.map((e, i) => {
+                    {headerImages?.length > 0 && headerImages?.map((e, i) => {
                         if (e.type == 'mp4') {
                             return <video width="300" height="200" controls>
                                 <source src={`https://basrabackend.justcode.am/uploads/${e?.file}`} type="video/mp4" />
@@ -231,12 +210,28 @@ export const Profile = () => {
             </section>
 
             <section className='siteHeaderBlock'>
+                <h1>العلامات التجارية</h1>
+                <div className='siteHeader'>
+                    {brands?.length > 0 && brands?.map((e, i) => (
+                        <img alt='' src={`https://basrabackend.justcode.am/uploads/${e?.photo}`} key={i} />
+                    ))}
+                    <div onClick={() => setOpenCreateBrend(true)} className='siteHeader' style={{ width: '140px' }}>
+                        <img alt='' src={require('../../assets/images/add.png')} className='addHeader' />
+                    </div>
+                </div>
+            </section>
+
+
+
+
+            <section className='siteHeaderBlock'>
                 <h1>فئات</h1>
                 <div className='siteHeader'>
-                    {categories?.length > 0 && categories?.map((e, i) => (
-                        <img alt='' src={require(`../../assets/images/${e?.image}`)} key={i} />
-                    ))}
-                    <div className='siteHeader' style={{ width: '140px' }}>
+                    {categories?.length > 0 && categories?.map((e, i) => {
+                        console.log(e)
+                        return <img alt='' src={`https://basrabackend.justcode.am/uploads/${e?.photo}`} key={i} />
+                    })}
+                    <div onClick={() => setOpenAddCategory(true)} className='siteHeader' style={{ width: '140px' }}>
                         <img alt='' src={require('../../assets/images/add.png')} className='addHeader' />
                     </div>
                 </div>

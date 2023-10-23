@@ -31,7 +31,7 @@ export const LoginAction = (data) => {
     }
 }
 
-export const GetCategory = () => {
+export const GetCategory = (id) => {
     var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
     myHeaders.append('Authorization', `Bearer ${token}`);
@@ -42,7 +42,7 @@ export const GetCategory = () => {
     };
     return (dispatch) => {
         dispatch(StartGetCategory())
-        fetch(`${api}/get_category`, requestOptions)
+        fetch(`${api}/get_category?platform_id=${id}`, requestOptions)
             .then((r) => r.json())
             .then(r => {
                 if (r.status) {
@@ -58,7 +58,7 @@ export const GetCategory = () => {
     }
 }
 
-export const DeletCategoryAction = (data) => {
+export const DeletCategoryAction = (data, id) => {
     var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
     myHeaders.append('Authorization', `Bearer ${token}`);
@@ -73,7 +73,7 @@ export const DeletCategoryAction = (data) => {
             .then((r) => r.json())
             .then(r => {
                 if (r.status) {
-                    dispatch(GetCategory())
+                    dispatch(GetCategory(id))
                     dispatch(SuccessDelectCategory(r))
                 }
                 else {
@@ -86,7 +86,7 @@ export const DeletCategoryAction = (data) => {
     }
 }
 
-export const UpdateCategoryAction = (data) => {
+export const UpdateCategoryAction = (data, id) => {
     var myHeaders = new Headers();
     myHeaders.append("Authorization", `Bearer ${token}`);
     var formdata = new FormData();
@@ -106,7 +106,7 @@ export const UpdateCategoryAction = (data) => {
             .then(response => response.json())
             .then(r => {
                 if (r.status) {
-                    dispatch(GetCategory())
+                    dispatch(GetCategory(id))
                 }
             })
             .catch(error => {
@@ -114,7 +114,7 @@ export const UpdateCategoryAction = (data) => {
     }
 }
 
-export const GetBrandAction = (page) => {
+export const GetBrandAction = (page, id) => {
     var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
     myHeaders.append('Authorization', `Bearer ${token}`);
@@ -125,9 +125,10 @@ export const GetBrandAction = (page) => {
     };
     return (dispatch) => {
         dispatch(StartGetBreands())
-        fetch(`${api}/get_brands?page=${page}`, requestOptions)
+        fetch(`${api}/get_brands?page=${page}&platform_id=${id}`, requestOptions)
             .then((r) => r.json())
             .then(r => {
+                console.log('dsd')
                 if (r.status) {
                     dispatch(SuccessGetBreand(r))
                 }
@@ -141,7 +142,7 @@ export const GetBrandAction = (page) => {
     }
 }
 
-export const UpdateBrendCategory = (data) => {
+export const UpdateBrendCategory = (data, id) => {
     var myHeaders = new Headers();
     myHeaders.append("Authorization", `Bearer ${token}`);
     var formdata = new FormData();
@@ -150,6 +151,8 @@ export const UpdateBrendCategory = (data) => {
         formdata.append("photo", data.photo, "file");
     }
     formdata.append("brand_id", data.id);
+    formdata.append("platform_id", id);
+
     var requestOptions = {
         method: 'POST',
         headers: myHeaders,
@@ -161,7 +164,7 @@ export const UpdateBrendCategory = (data) => {
             .then(response => response.json())
             .then(r => {
                 if (r.status) {
-                    dispatch(GetBrandAction())
+                    dispatch(GetBrandAction(id))
                 }
             })
             .catch(error => {
@@ -185,7 +188,7 @@ export const DelectBrandAction = (data) => {
             .then((r) => r.json())
             .then(r => {
                 if (r.status) {
-                    dispatch(GetBrandAction())
+                    dispatch(GetBrandAction(data.page, data.platform_id))
                 }
             })
             .catch((error) => {
@@ -417,6 +420,7 @@ export const GetAllProducts = (data) => {
         fetch(`${api}/get_products`, requestOptions)
             .then((r) => r.json())
             .then(r => {
+                console.log(r, 'afjkds')
                 if (r.status) {
                     dispatch(SuccessGetProducts(r.data))
                 }
@@ -425,6 +429,7 @@ export const GetAllProducts = (data) => {
                 }
             })
             .catch((error) => {
+                console.log('error', error)
                 dispatch(ErrorGetPorducts())
             });
     }
@@ -696,6 +701,7 @@ export const CreatBannerAction = (data) => {
     var formdata = new FormData();
     formdata.append("slider", data.type);
     formdata.append("file[]", data.img);
+    formdata.append("platform_id", data.platformid);
     var requestOptions = {
         method: 'POST',
         headers: myHeaders,
@@ -707,8 +713,9 @@ export const CreatBannerAction = (data) => {
         fetch(`${api}/create_baner`, requestOptions)
             .then((r) => r.json())
             .then(r => {
+                console.log(r, 'sfdsf')
                 if (r.status) {
-                    dispatch(GetSliderAction(data.type))
+                    dispatch(GetSliderAction(data.type, data.platformid))
                 }
                 else {
                 }
@@ -718,7 +725,7 @@ export const CreatBannerAction = (data) => {
     }
 }
 
-export const GetSliderAction = (data) => {
+export const GetSliderAction = (data, id) => {
     var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
     myHeaders.append('Authorization', `Bearer ${token}`);
@@ -729,9 +736,10 @@ export const GetSliderAction = (data) => {
     };
     return (dispatch) => {
         dispatch(StartGetSlider())
-        fetch(`${api}/get_slider?slider=${data}`, requestOptions)
+        fetch(`${api}/get_slider?slider=${data}&platform_id=${id}`, requestOptions)
             .then((r) => r.json())
             .then(r => {
+                console.log(r)
                 if (r.status) {
                     if (data === 'first') {
                         dispatch(SuccessGetSlider(r.data))

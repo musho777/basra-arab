@@ -281,7 +281,7 @@ export const AddProduct = ({ open, setOpen }) => {
 
 
     useEffect(() => {
-        dispatch(GetBrandAction(brendsPage))
+        dispatch(GetBrandAction(brendsPage, details.platform))
     }, [brendsPage])
 
     useEffect(() => {
@@ -366,7 +366,7 @@ export const AddProduct = ({ open, setOpen }) => {
                     open={openCreateCategory}
                     setOpen={setOpenCategory}
                     setBrendsPage={(e) => setCategpryPage(e)}
-
+                    platformId={details.platform}
                 />
             }
             {openCreateBrend &&
@@ -374,6 +374,8 @@ export const AddProduct = ({ open, setOpen }) => {
                     open={openCreateBrend}
                     setOpen={setOpenBrend}
                     setBrendsPage={(e) => setBrendsPage(e)}
+                    page={brendsPage}
+                    platformId={details.platform}
                 />
             }
             {openCollection &&
@@ -446,7 +448,7 @@ export const AddProduct = ({ open, setOpen }) => {
                         <TextField error={error.characteristics != ''} label="Характеристики" multiline rows={5} variant="filled" sx={{ width: '31%' }} value={details?.characteristics} onChange={(e) => setDetails({ ...details, characteristics: e.target.value })} />
                         <TextField error={error.composition != ''} label="Состав" multiline rows={5} variant="filled" sx={{ width: '31%' }} value={details?.composition} onChange={(e) => setDetails({ ...details, composition: e.target.value })} />
 
-                        <div className='catsAndSubcats'>
+                        {details.platform && <div className='catsAndSubcats'>
                             <FormControl error={error.category != ''} variant="filled" sx={{ width: '71%' }}>
                                 <InputLabel>Категория</InputLabel>
                                 <Select label="Категория" value={details.category} onChange={(e) => SelectCategoy(e)}  >
@@ -456,7 +458,7 @@ export const AddProduct = ({ open, setOpen }) => {
                                 </Select>
                             </FormControl>
                             <Button variant="contained" color='grey' onClick={() => setOpenCategory(true)}>Категории</Button>
-                        </div>
+                        </div>}
                         {details.category && <div className='catsAndSubcats'>
                             <FormControl variant="filled" sx={{ width: '71%' }}  >
                                 <InputLabel>Подкатегория</InputLabel>
@@ -468,7 +470,7 @@ export const AddProduct = ({ open, setOpen }) => {
                             </FormControl>
                             <Button onClick={() => setOpenSubCategory(true)} variant="contained" color='grey'>Подкатегории</Button>
                         </div>}
-                        <div className='catsAndSubcats'>
+                        {details.platform && <div className='catsAndSubcats'>
                             <FormControl error={error.brand != ''} variant="filled" sx={{ width: '81%' }} >
                                 <InputLabel>Бренд</InputLabel>
                                 <Select label="Бренд" value={details?.brand} onChange={(e) => setDetails({ ...details, brand: e.target.value })}  >
@@ -479,7 +481,7 @@ export const AddProduct = ({ open, setOpen }) => {
                                 </Select>
                             </FormControl>
                             <Button onClick={() => setOpenBrend(true)} variant="contained" color='grey'>Бренд</Button>
-                        </div>
+                        </div>}
 
                         <div className='catsAndSubcats'>
                             <FormControl variant="filled" sx={{ width: '81%' }}>

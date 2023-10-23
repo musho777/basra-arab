@@ -19,12 +19,13 @@ export const Products = () => {
     const { getProducts } = useSelector(st => st)
     const [editId, setEditId] = useState(null)
     const dispatch = useDispatch()
+    const [search, setSearch] = useState('')
 
     useEffect(() => {
         if (!addProduct) {
-            dispatch(GetAllProducts({ page: currentPage }))
+            dispatch(GetAllProducts({ page: currentPage, isfiltre: false, search: search }))
         }
-    }, [currentPage, addProduct])
+    }, [currentPage, addProduct, search])
 
     useEffect(() => {
         setTableData(getProducts?.data?.data)
@@ -41,12 +42,6 @@ export const Products = () => {
         dispatch(DelectPorducetsAction({ product_id: id }, page))
     }
 
-
-    if (getProducts?.loading) {
-        return <div style={{ width: '100%', height: '100%' }}>
-            <Loading />
-        </div>
-    }
     return (
         <div className='products'>
             {addProduct &&
@@ -65,7 +60,7 @@ export const Products = () => {
             <section className='productsTop'>
                 <div className='productsTopLeft'>
                     <button onClick={() => setAddProduct(true)}>اضافة عنصر</button>
-                    <input placeholder='بحث منتوج' />
+                    <input onChange={(e) => setSearch(e.target.value)} placeholder='بحث منتوج' />
                 </div>
                 <div className='productsTopRight'>
                     <div className='filterproduct'>
@@ -80,71 +75,81 @@ export const Products = () => {
                     </h1>
                 </div>
             </section>
+            {getProducts?.loading ?
+                <div style={{ width: '100%', height: '100%' }}>
+                    <Loading />
+                </div> :
+                <div className='tableDiv'>
+                    <table className='ordersTable'>
+                        <tbody>
+                            {tableData?.length > 0
+                                ? tableData?.map((e, i) => (
+                                    <tr className='eachTR' key={i}>
+                                        {(!addProduct && !editProduct) && <div style={{ display: 'flex', height: 30, gap: 10 }}>
+                                            <Button onClick={() => {
+                                                setEditProduct(true)
+                                                setEditId(e.id)
+                                            }} variant='contained' className='createButon'>يحرر</Button>
+                                            <Button onClick={() => DeletProducts(e.id)} variant="contained" color='error'>يمسح</Button>
+                                        </div>}
+                                        <td className='ordersTD' style={{ width: '5%' }}>
+                                            <div className='eachData'>
+                                                <span className='eachDataTitle'>كمية</span>
+                                                <p className='eachDataValue'>{e?.product_count}</p>
+                                            </div>
+                                        </td>
+                                        <td className='ordersTD'>
+                                            <div className='eachData'>
+                                                <span className='eachDataTitle'>سعر الخصم</span>
+                                                <p className='eachDataValue'>{e?.discount}</p>
+                                            </div>
+                                        </td>
+                                        <td className='ordersTD'>
+                                            <div className='eachData'>
+                                                <span className='eachDataTitle'>السعر بدون خصم</span>
+                                                <p className='eachDataValue'>{e?.price}</p>
+                                            </div>
+                                        </td>
+                                        <td className='ordersTD'>
+                                            <div className='eachData'>
+                                                <span className='eachDataTitle'>ماركة</span>
+                                                <p className='eachDataValue'>{e?.brand.name}</p>
+                                            </div>
+                                        </td>
+                                        <td className='ordersTD'>
+                                            <div className='eachData'>
+                                                <span className='eachDataTitle'>هاتف</span>
+                                                <p className='eachDataValue'>{e?.phone}</p>
+                                            </div>
+                                        </td>
+                                        <td className='ordersTD'>
+                                            <div className='eachData'>
+                                                <span className='eachDataTitle'>اسم</span>
+                                                <p className='eachDataValue'>{e?.name}</p>
+                                            </div>
+                                        </td>
+                                        {e?.photos?.length && <td className='ordersTD'><img alt='' src={`https://basrabackend.justcode.am/uploads/${e?.photos[0]?.photo}`} /></td>}
+                                    </tr>
+                                ))
+                                : <span>No table data</span>
+                            }
+                        </tbody>
+                    </table>
 
-            <table className='ordersTable'>
-                <tbody>
-                    {tableData?.length > 0
-                        ? tableData?.map((e, i) => (
-                            <tr className='eachTR' key={i}>
-                                {(!addProduct && !editProduct) && <div style={{ display: 'flex', height: 30, gap: 10 }}>
-                                    <Button onClick={() => {
-                                        setEditProduct(true)
-                                        setEditId(e.id)
-                                    }} variant='contained' className='createButon'>يحرر</Button>
-                                    <Button onClick={() => DeletProducts(e.id)} variant="contained" color='error'>يمسح</Button>
-                                </div>}
-                                <td className='ordersTD' style={{ width: '5%' }}>
-                                    <div className='eachData'>
-                                        <span className='eachDataTitle'>كمية</span>
-                                        <p className='eachDataValue'>{e?.product_count}</p>
-                                    </div>
-                                </td>
-                                <td className='ordersTD'>
-                                    <div className='eachData'>
-                                        <span className='eachDataTitle'>سعر الخصم</span>
-                                        <p className='eachDataValue'>{e?.discount}</p>
-                                    </div>
-                                </td>
-                                <td className='ordersTD'>
-                                    <div className='eachData'>
-                                        <span className='eachDataTitle'>السعر بدون خصم</span>
-                                        <p className='eachDataValue'>{e?.price}</p>
-                                    </div>
-                                </td>
-                                <td className='ordersTD'>
-                                    <div className='eachData'>
-                                        <span className='eachDataTitle'>ماركة</span>
-                                        <p className='eachDataValue'>{e?.brand.name}</p>
-                                    </div>
-                                </td>
-                                <td className='ordersTD'>
-                                    <div className='eachData'>
-                                        <span className='eachDataTitle'>هاتف</span>
-                                        <p className='eachDataValue'>{e?.phone}</p>
-                                    </div>
-                                </td>
-                                <td className='ordersTD'>
-                                    <div className='eachData'>
-                                        <span className='eachDataTitle'>اسم</span>
-                                        <p className='eachDataValue'>{e?.name}</p>
-                                    </div>
-                                </td>
-                                {e?.photos?.length && <td className='ordersTD'><img alt='' src={`https://basrabackend.justcode.am/uploads/${e?.photos[0]?.photo}`} /></td>}
-                            </tr>
-                        ))
-                        : <span>No table data</span>
-                    }
-                </tbody>
-            </table>
 
-            <section className='pagination'>
-                <Pagination
-                    color="secondary"
-                    defaultPage={currentPage}
-                    onChange={(e, value) => setCurrentPage(value)}
-                    count={Math.ceil(getProducts.data.total / 10)}
-                />
-            </section>
+
+
+
+                    {!addProduct && !editProduct && <section className='pagination'>
+                        <Pagination
+                            color="secondary"
+                            defaultPage={currentPage}
+                            onChange={(e, value) => setCurrentPage(value)}
+                            count={Math.ceil(getProducts.data.total / 10)}
+                        />
+                    </section>}
+                </div>
+            }
         </div>
     )
 

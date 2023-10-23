@@ -116,7 +116,7 @@ export const AddCollections = ({ open, setOpen, setBrendsPage, }) => {
                     <Pagination
                         color="secondary"
                         onChange={(e, value) => setBrendsPage(value)}
-                        count={getCollections?.data?.data?.total}
+                        count={Math.ceil(getCollections?.data?.data?.total / 10)}
                     />
                 </div>}
                 <div className='closePop'>

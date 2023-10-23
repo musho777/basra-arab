@@ -3,14 +3,15 @@ import { Pagination, TextField } from '@mui/material'
 import Button from '@mui/material/Button'
 import { styled } from '@mui/material/styles'
 import { useDispatch, useSelector } from 'react-redux'
-import { DelectBrandAction, DeletCategoryAction, GetBrandAction, UpdateBrendCategory, UpdateCategoryAction } from '../../Services/action/action'
+import { DelectBrandAction, GetBrandAction, UpdateBrendCategory, UpdateCategoryAction } from '../../Services/action/action'
 import { SuccessDelectCategory } from '../../Services/action/SuccessAction'
 import { ErrorCreatCategory } from '../../Services/action/errorAction'
 import { Loading } from '../../Components/Loading'
 
-export const AddBrends = ({ open, setOpen, setBrendsPage, }) => {
+export const AddBrends = ({ open, setOpen, setBrendsPage, platformId, page }) => {
     const [categories, setCategories] = useState([])
     const { getBrand } = useSelector((st) => st)
+    console.log(getBrand, 'getBrand,sss')
     useEffect(() => {
         setCategories(getBrand?.data?.data?.data)
         if (getBrand.status) {
@@ -72,6 +73,7 @@ export const AddBrends = ({ open, setOpen, setBrendsPage, }) => {
         var formdata = new FormData();
         formdata.append("name", newCategory.name);
         formdata.append("photo", img, "file");
+        formdata.append('platform_id', platformId)
         var requestOptions = {
             method: 'POST',
             headers: myHeaders,
@@ -83,7 +85,7 @@ export const AddBrends = ({ open, setOpen, setBrendsPage, }) => {
             .then(r => {
 
                 if (r.status) {
-                    dispatch(GetBrandAction())
+                    dispatch(GetBrandAction(1, platformId))
                     dispatch(SuccessDelectCategory(r))
                 }
                 else {
@@ -105,11 +107,11 @@ export const AddBrends = ({ open, setOpen, setBrendsPage, }) => {
     }
 
     const Update = (data, i) => {
-        dispatch(UpdateBrendCategory(data))
+        dispatch(UpdateBrendCategory(data, platformId))
     }
 
     const DeletCategory = (id) => {
-        dispatch(DelectBrandAction({ brand_id: id }))
+        dispatch(DelectBrandAction({ brand_id: id, platform_id: platformId, page: page ? page : 1 }))
     }
 
     return (
@@ -166,7 +168,7 @@ export const AddBrends = ({ open, setOpen, setBrendsPage, }) => {
                     <Pagination
                         color="secondary"
                         onChange={(e, value) => setBrendsPage(value)}
-                        count={getBrand?.data?.data?.total}
+                        count={Math.ceil(getBrand?.data?.data?.total / 10)}
                     />
                 </div>}
                 <div className='closePop'>

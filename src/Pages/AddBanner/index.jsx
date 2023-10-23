@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { CreatBannerAction, DeletSlideAction, GetCategory } from '../../Services/action/action'
 import { Loading } from '../../Components/Loading'
 
-export const AddBanner = ({ open, setOpen, type }) => {
+export const AddBanner = ({ open, setOpen, type, platformid }) => {
     const [categories, setCategories] = useState([])
     const { getSlider } = useSelector((st) => st)
     const [fileType, setFileType] = useState('')
@@ -66,7 +66,7 @@ export const AddBanner = ({ open, setOpen, type }) => {
     }
 
     function handleNewCategory() {
-        dispatch(CreatBannerAction({ type, img }))
+        dispatch(CreatBannerAction({ type, img, platformid }))
     }
 
     function close() {

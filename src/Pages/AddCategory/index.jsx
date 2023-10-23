@@ -9,7 +9,7 @@ import { SuccessDelectCategory } from '../../Services/action/SuccessAction'
 import { ErrorCreatCategory } from '../../Services/action/errorAction'
 import { Loading } from '../../Components/Loading'
 
-export const AddCategory = ({ open, setOpen }) => {
+export const AddCategory = ({ open, setOpen, platformId }) => {
     const [categories, setCategories] = useState([])
     const { getCategory } = useSelector((st) => st)
 
@@ -74,6 +74,8 @@ export const AddCategory = ({ open, setOpen }) => {
         var formdata = new FormData();
         formdata.append("name", newCategory.name);
         formdata.append("photo", img, "file");
+        formdata.append("platform_id", platformId);
+
         var requestOptions = {
             method: 'POST',
             headers: myHeaders,
@@ -83,9 +85,8 @@ export const AddCategory = ({ open, setOpen }) => {
         fetch("https://basrabackend.justcode.am/api/admin/create_category?name=eee&photo", requestOptions)
             .then(response => response.json())
             .then(r => {
-
                 if (r.status) {
-                    dispatch(GetCategory())
+                    dispatch(GetCategory(platformId))
                     dispatch(SuccessDelectCategory(r))
                 }
                 else {
@@ -107,11 +108,11 @@ export const AddCategory = ({ open, setOpen }) => {
     }
 
     const Update = (data, i) => {
-        dispatch(UpdateCategoryAction(data))
+        dispatch(UpdateCategoryAction(data, platformId))
     }
 
     const DeletCategory = (id) => {
-        dispatch(DeletCategoryAction({ category_id: id }))
+        dispatch(DeletCategoryAction({ category_id: id, platformId }))
     }
 
     return (
@@ -164,14 +165,6 @@ export const AddCategory = ({ open, setOpen }) => {
                 </div> :
                     <Loading />
                 }
-
-                {/* {!getCategory.loading && <div className='Pagination'>
-                    <Pagination
-                        color="secondary"
-                        onChange={(e, value) => setBrendsPage(value)}
-                        count={getCategory?.data?.total}
-                    />
-                </div>} */}
 
                 <div className='closePop'>
                     <Button component="label" variant="contained" color='grey' onClick={close}>Закрыть</Button>
