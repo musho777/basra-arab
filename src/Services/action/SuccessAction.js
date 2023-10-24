@@ -135,3 +135,10 @@ export const SuccessGetChatRedcuer = (data) => {
         data
     }
 }
+
+export const SuccessSinglPageChat = (data) => {
+    return {
+        type: 'SuccessSinglPageChat',
+        data
+    }
+}

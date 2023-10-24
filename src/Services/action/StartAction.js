@@ -117,3 +117,9 @@ export const StartGetChatReducer = () => {
         type: 'StartGetChatReducer'
     }
 }
+
+export const StartGetSinglPageAction = () => {
+    return {
+        type: 'StartGetSinglPageAction'
+    }
+}

@@ -112,3 +112,9 @@ export const ErrorGetReducer = () => {
         type: 'ErrorGetReducer'
     }
 }
+
+export const ErrorSinglPageAction = () => {
+    return {
+        type: 'ErrorSinglPageAction'
+    }
+}

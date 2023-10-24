@@ -1,28 +1,77 @@
 import './style.css'
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Smile, Send, CheckMarkWhite, CheckMarkBlack } from '../Svg'
+import { useDispatch, useSelector } from 'react-redux'
+import { GetSinglPageChatRoom, NewMsgAction } from '../../Services/action/action'
+import { Loading } from '../Loading'
 
 export const ChatRight = ({ currentMember }) => {
-    const [messages, setMessages] = useState([
-        {
-            from: 'user',
-            message: `OMG 😲 do you remember what you did last night at the work night out?`,
-            time: '18:12',
-            read: true,
-        },
-        {
-            from: 'me',
-            message: `no haha`,
-            time: '18:16',
-            read: true,
-        },
-        {
-            from: 'me',
-            message: `I don't remember anything 😄`,
-            time: '18:16',
-            read: false,
-        },
-    ])
+    const { getSinglChat } = useSelector((st) => st)
+    const dispatch = useDispatch()
+    const [messages, setMessages] = useState([])
+    const [msg, setMsg] = useState('')
+    const containerRef = useRef(null);
+    useEffect(() => {
+        const scrollableDiv = containerRef.current;
+        if (scrollableDiv) {
+            scrollableDiv.scrollTop = 810
+        }
+    }, [messages]);
+    useEffect(() => {
+        let item = []
+        getSinglChat.data.data && getSinglChat?.data?.data?.map((elm, i) => {
+            let from = 'me'
+            if (elm.sender_id === 1) {
+                from = 'me'
+            }
+            else {
+                from = 'user'
+            }
+            let date = new Date(elm.created_at);
+            let today = new Date()
+            let day = date.getDate()
+            let mount = date.getMonth()
+            let houre = date.getHours()
+            let minute = date.getMinutes()
+            let Datee = ''
+            if (day < 10) {
+                day = `0${day}`
+            }
+            if (mount < 10) {
+                mount = `0${mount}`
+            }
+            if (houre < 10) {
+                houre = `0${houre}`
+            }
+            if (minute < 10) {
+                minute = `0${minute}`
+            }
+            if (date.getDate() == today.getDate()) {
+                Datee = `${houre}:${minute}`
+            }
+            else {
+                Datee = `${day}.${mount}`
+            }
+            item.push({
+                from: from,
+                message: elm.message,
+                read: true,
+                time: Datee
+            })
+        })
+        setMessages(item)
+    }, [getSinglChat])
+
+    useEffect(() => {
+        dispatch(GetSinglPageChatRoom({ receiver_id: currentMember.sender_id }))
+    }, [currentMember])
+
+    const sendMsg = () => {
+        if (msg) {
+            dispatch(NewMsgAction({ message: msg, receiver_id: currentMember.sender_id }))
+        }
+    }
+
     return (
         <div className='chatRight'>
             {Object.keys(currentMember)?.length
@@ -35,35 +84,39 @@ export const ChatRight = ({ currentMember }) => {
                         <span>{currentMember?.sender?.name}</span>
                     </div>
 
-                    <div className='chatMessages'>
-                        {messages?.length > 0
-                            ? messages?.map((e, i) => (
-                                <div className={e?.from === 'me' ? 'eachMyMessage' : 'eachMessage'} key={i}>
-                                    <div className={e?.from === 'me' ? 'myMessage' : 'message'} >
-                                        <p>{e?.message}</p>
-                                        <div className='messageTime'>
-                                            <span>{e?.time}</span>
-                                            {e?.from === 'me' && e?.read
-                                                ? <CheckMarkWhite />
-                                                : e?.from !== 'me' && e?.read
-                                                    ? <CheckMarkBlack />
-                                                    : ''
-                                            }
+                    {getSinglChat.loading ?
+                        <Loading /> :
+                        <div ref={containerRef} className='chatMessages'>
+                            {messages?.length > 0
+                                ? messages?.map((e, i) => (
+                                    <div className={e?.from === 'me' ? 'eachMyMessage' : 'eachMessage'} key={i}>
+                                        <div className={e?.from === 'me' ? 'myMessage' : 'message'} >
+                                            <p>{e?.message}</p>
+                                            <div className='messageTime'>
+                                                <span>{e?.time}</span>
+                                                {e?.from === 'me' && e?.read
+                                                    ? <CheckMarkWhite />
+                                                    : e?.from !== 'me' && e?.read
+                                                        ? <CheckMarkBlack />
+                                                        : ''
+                                                }
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            ))
-                            : <span className='noChatMember'>No messages</span>
-                        }
-                    </div>
+                                ))
+                                : <span className='noChatMember'>No messages</span>
+                            }
+                        </div>
+                    }
 
                     <div className='chatBottom'>
                         <div className='chatBottomBg'>
                             <div><Smile /></div>
                             <textarea
                                 placeholder='Message'
+                                onChange={(e) => setMsg(e.target.value)}
                             />
-                            <button><Send /></button>
+                            <button onClick={() => sendMsg()}><Send /></button>
                         </div>
                     </div>
                 </section>

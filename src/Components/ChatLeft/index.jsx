@@ -38,7 +38,7 @@ export const ChatLeft = ({ currentMember, setCurrentMember }) => {
                     if (houre < 10) {
                         houre = `0${houre}`
                     }
-                    if (minute) {
+                    if (minute < 10) {
                         minute = `0${minute}`
                     }
                     if (date.getDate() == today.getDate()) {
