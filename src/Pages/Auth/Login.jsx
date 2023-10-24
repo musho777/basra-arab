@@ -57,6 +57,6 @@ export const Register = () => {
     return <div className="loginWrapper">
         <TextField value={data[0].value} onChange={(e) => handelChange(e.target.value, 0)} label="Название" variant="filled" sx={{ width: '31%' }} />
         <TextField value={data[1].value} onChange={(e) => handelChange(e.target.value, 1)} label="Название" variant="filled" sx={{ width: '31%' }} />
-        <Button onClick={() => handelClick()} sx={{ width: '31%' }} variant="contained" color='grey' >Категории</Button>
+        <Button onClick={() => handelClick()} sx={{ width: '31%' }} variant="contained" color='grey' >Login</Button>
     </div>
 }

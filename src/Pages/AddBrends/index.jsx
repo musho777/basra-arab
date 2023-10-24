@@ -11,7 +11,6 @@ import { Loading } from '../../Components/Loading'
 export const AddBrends = ({ open, setOpen, setBrendsPage, platformId, page }) => {
     const [categories, setCategories] = useState([])
     const { getBrand } = useSelector((st) => st)
-    console.log(getBrand, 'getBrand,sss')
     useEffect(() => {
         setCategories(getBrand?.data?.data?.data)
         if (getBrand.status) {

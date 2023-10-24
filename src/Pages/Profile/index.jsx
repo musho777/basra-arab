@@ -72,7 +72,6 @@ export const Profile = () => {
     }, [getCategory])
 
     useEffect(() => {
-        console.log(getBrand.data.data, 'getBrand')
         setBrands(getBrand?.data?.data?.data)
     }, [getBrand])
 
@@ -228,7 +227,6 @@ export const Profile = () => {
                 <h1>فئات</h1>
                 <div className='siteHeader'>
                     {categories?.length > 0 && categories?.map((e, i) => {
-                        console.log(e)
                         return <img alt='' src={`https://basrabackend.justcode.am/uploads/${e?.photo}`} key={i} />
                     })}
                     <div onClick={() => setOpenAddCategory(true)} className='siteHeader' style={{ width: '140px' }}>

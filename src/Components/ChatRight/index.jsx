@@ -10,6 +10,7 @@ export const ChatRight = ({ currentMember }) => {
     const dispatch = useDispatch()
     const [messages, setMessages] = useState([])
     const [msg, setMsg] = useState('')
+    const { addMsg } = useSelector((st) => st)
     const containerRef = useRef(null);
     useEffect(() => {
         const scrollableDiv = containerRef.current;
@@ -19,9 +20,14 @@ export const ChatRight = ({ currentMember }) => {
     }, [messages]);
     useEffect(() => {
         let item = []
-        getSinglChat.data.data && getSinglChat?.data?.data?.map((elm, i) => {
-            let from = 'me'
-            if (elm.sender_id === 1) {
+        let data = getSinglChat?.data?.data
+        let reversData = []
+        if (data?.length) {
+            reversData = data.reverse()
+        }
+        reversData && reversData.map((elm, i) => {
+            let from = ''
+            if (elm.sender_id == 1) {
                 from = 'me'
             }
             else {
@@ -63,8 +69,59 @@ export const ChatRight = ({ currentMember }) => {
     }, [getSinglChat])
 
     useEffect(() => {
-        dispatch(GetSinglPageChatRoom({ receiver_id: currentMember.sender_id }))
+        if (currentMember?.sender_id) {
+            dispatch(GetSinglPageChatRoom({ receiver_id: currentMember.sender_id }))
+        }
     }, [currentMember])
+
+
+    useEffect(() => {
+        console.log(addMsg.data)
+        if (Object.keys(addMsg.data).length) {
+            let item = [...messages]
+            let elm = addMsg.data
+            let date = new Date(elm.created_at);
+            let today = new Date()
+            let day = date.getDate()
+            let mount = date.getMonth()
+            let houre = date.getHours()
+            let minute = date.getMinutes()
+            let Datee = ''
+            if (day < 10) {
+                day = `0${day}`
+            }
+            if (mount < 10) {
+                mount = `0${mount}`
+            }
+            if (houre < 10) {
+                houre = `0${houre}`
+            }
+            if (minute < 10) {
+                minute = `0${minute}`
+            }
+            if (date.getDate() == today.getDate()) {
+                Datee = `${houre}:${minute}`
+            }
+            else {
+                Datee = `${day}.${mount}`
+            }
+            let from = ''
+            if (elm.sender_id == 1) {
+                from = 'me'
+            }
+            else {
+                from = 'user'
+            }
+            item.push({
+                from: from,
+                message: elm.message,
+                read: true,
+                time: Datee
+            })
+            setMessages(item)
+        }
+    }, [addMsg])
+
 
     const sendMsg = () => {
         if (msg) {

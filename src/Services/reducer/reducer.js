@@ -17,6 +17,7 @@ import { EditStoryOrderReducer } from './EditStoryOrderReducer'
 import { GetSliderRderucer } from './GetSliderRderucer'
 import { ChatRoomReducer } from './ChatRoomReducer'
 import { GetSinglPageChatRoomReducer } from './GetSinglPageChatRoomReducer'
+import { AddMsgReducer } from './AddMsgReducer'
 
 
 export default combineReducers({
@@ -38,4 +39,5 @@ export default combineReducers({
     getSlider: GetSliderRderucer,
     chatRoom: ChatRoomReducer,
     getSinglChat: GetSinglPageChatRoomReducer,
+    addMsg: AddMsgReducer,
 })

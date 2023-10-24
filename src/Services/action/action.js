@@ -15,7 +15,7 @@ export const LoginAction = (data) => {
     };
     return (dispatch) => {
         dispatch(StartLogin())
-        fetch(`${api}/admin/login`, requestOptions)
+        fetch(`${api}/login`, requestOptions)
             .then(response => response.json())
             .then(r => {
                 if (r.status) {
@@ -128,7 +128,6 @@ export const GetBrandAction = (page, id) => {
         fetch(`${api}/get_brands?page=${page}&platform_id=${id}`, requestOptions)
             .then((r) => r.json())
             .then(r => {
-                console.log('dsd')
                 if (r.status) {
                     dispatch(SuccessGetBreand(r))
                 }
@@ -420,7 +419,6 @@ export const GetAllProducts = (data) => {
         fetch(`${api}/get_products`, requestOptions)
             .then((r) => r.json())
             .then(r => {
-                console.log(r, 'afjkds')
                 if (r.status) {
                     dispatch(SuccessGetProducts(r.data))
                 }
@@ -429,7 +427,6 @@ export const GetAllProducts = (data) => {
                 }
             })
             .catch((error) => {
-                console.log('error', error)
                 dispatch(ErrorGetPorducts())
             });
     }
@@ -713,7 +710,6 @@ export const CreatBannerAction = (data) => {
         fetch(`${api}/create_baner`, requestOptions)
             .then((r) => r.json())
             .then(r => {
-                console.log(r, 'sfdsf')
                 if (r.status) {
                     dispatch(GetSliderAction(data.type, data.platformid))
                 }
@@ -739,7 +735,6 @@ export const GetSliderAction = (data, id) => {
         fetch(`${api}/get_slider?slider=${data}&platform_id=${id}`, requestOptions)
             .then((r) => r.json())
             .then(r => {
-                console.log(r)
                 if (r.status) {
                     if (data === 'first') {
                         dispatch(SuccessGetSlider(r.data))
@@ -867,7 +862,6 @@ export const GetMyChatRoom = (data) => {
 
 
 export const GetSinglPageChatRoom = (data) => {
-    console.log(data)
     var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
     myHeaders.append('Authorization', `Bearer ${token}`);
@@ -882,6 +876,7 @@ export const GetSinglPageChatRoom = (data) => {
         fetch(`${api}/single_page_chat`, requestOptions)
             .then((r) => r.json())
             .then(r => {
+                console.log(r)
                 if (r.status) {
                     dispatch(SuccessSinglPageChat(r.data))
                 }
@@ -896,7 +891,6 @@ export const GetSinglPageChatRoom = (data) => {
 }
 
 export const NewMsgAction = (data) => {
-    console.log(data)
     var myHeaders = new Headers();
     myHeaders.append('Authorization', `Bearer ${token}`);
     myHeaders.append("Content-Type", "application/json");
@@ -910,9 +904,16 @@ export const NewMsgAction = (data) => {
         fetch(`${api}/new_message`, requestOptions)
             .then((r) => r.json())
             .then(r => {
-                console.log(r)
+                console.log(r, 'asdfij')
             })
             .catch((error) => {
             });
+    }
+}
+
+export const AddMsgAction = (data) => {
+    return {
+        type: "AddMsgAction",
+        data
     }
 }
